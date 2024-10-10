@@ -42,3 +42,10 @@ class ResponseDetailView(generics.RetrieveAPIView):
     queryset = Response.objects.all()
     serializer_class = ResponseSerializer
 
+class ThreadResponseView(generics.ListAPIView):
+    serializer_class = ResponseSerializer
+    permission_classes = [IsAuthenticated]
+    def get_queryset(self):
+        thread_slug = self.kwargs['slug']
+        return Response.objects.filter(thread__slug=thread_slug, thread__user=self.request.user)
+

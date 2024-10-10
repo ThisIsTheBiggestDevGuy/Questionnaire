@@ -1,6 +1,6 @@
 
 from django.urls import path
-from .views import UserCreateView, ProfileDetailView, ThreadListCreateView, ThreadDetailView, ResponseListCreateView, ResponseDetailView
+from .views import UserCreateView, ProfileDetailView, ThreadResponseView,ThreadListCreateView, ThreadDetailView, ResponseListCreateView, ResponseDetailView
 # urls here:
 
 urlpatterns = [
@@ -10,5 +10,6 @@ urlpatterns = [
     path('threads/<int:pk>/', ThreadDetailView.as_view(), name='thread-detail'),
     path('responses/', ResponseListCreateView.as_view(), name='response-list-create'),
     path('responses/<int:pk>/', ResponseDetailView.as_view(), name='response-detail'),
+    path('threads/<slug:slug>/responses/', ThreadResponseView.as_view(), name='thread-responses'),
 ]
 

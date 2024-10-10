@@ -1,5 +1,7 @@
 from django.contrib.auth.models import User
 from django.db import models
+from django.utils.text import slugify
+from django.urls import reverse
 from questionnaire.models import Question
 
 # Models here:
@@ -15,6 +17,14 @@ class Thread(models.Model):
     description = models.TextField()
     questions = models.ManyToManyField(Question)
     is_public = models.BooleanField(default=False)
+    slug = models.SlugField(unique=True, blank=True)
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.title)
+        super().save(*args, **kwargs)
+    def get_absolute_url(self):
+        return reverse('thread-detail', kwargs={'slug': self.slug})
 
 
 class Response(models.Model):

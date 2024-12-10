@@ -33,19 +33,27 @@ class ThreadDetailView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAuthenticated]
 
 
+# Add authentication to ResponseListCreateView and ResponseDetailView
 class ResponseListCreateView(generics.ListCreateAPIView):
     queryset = Response.objects.all()
     serializer_class = ResponseSerializer
+    permission_classes = [IsAuthenticated]  # Added authentication
 
 
 class ResponseDetailView(generics.RetrieveAPIView):
     queryset = Response.objects.all()
     serializer_class = ResponseSerializer
+    permission_classes = [IsAuthenticated]  # Added authentication
 
+
+# Handle missing or invalid slug in ThreadResponseView
 class ThreadResponseView(generics.ListAPIView):
     serializer_class = ResponseSerializer
     permission_classes = [IsAuthenticated]
+
     def get_queryset(self):
-        thread_slug = self.kwargs['slug']
+        thread_slug = self.kwargs.get('slug')
+        if not thread_slug:
+            return Response.objects.none()  # Return empty queryset if slug is missing
         return Response.objects.filter(thread__slug=thread_slug, thread__user=self.request.user)
 
